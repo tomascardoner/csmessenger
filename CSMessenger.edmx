@@ -1,0 +1,699 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CSMessengerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="Abbreviation" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DatabaseName" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Semaphore" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessageID" />
+          </Key>
+          <Property Name="MessageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SourceCompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="SourceUserID" Type="smallint" Nullable="false" />
+          <Property Name="DestinationCompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="DestinationUserID" Type="smallint" Nullable="false" />
+          <Property Name="Text" Type="varchar(max)" Nullable="false" />
+          <Property Name="SentDateTime" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="ReceivedDate" Type="date" />
+          <Property Name="ReceivedTime" Type="time" Precision="0" />
+          <Property Name="ReadedDateTime" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="CompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="UserID" Type="smallint" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Semaphore" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserCompany">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AccessCompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="UserID" Type="smallint" Nullable="false" />
+          <Property Name="AccessCompanyID" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserFavorite">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="FavoriteCompanyID" />
+            <PropertyRef Name="FavoriteUserID" />
+          </Key>
+          <Property Name="CompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="UserID" Type="smallint" Nullable="false" />
+          <Property Name="FavoriteCompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="FavoriteUserID" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserNotification">
+          <Key>
+            <PropertyRef Name="SourceCompanyID" />
+            <PropertyRef Name="SourceUserID" />
+            <PropertyRef Name="DestinationCompanyID" />
+            <PropertyRef Name="DestinationUserID" />
+          </Key>
+          <Property Name="SourceCompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="SourceUserID" Type="smallint" Nullable="false" />
+          <Property Name="DestinationCompanyID" Type="tinyint" Nullable="false" />
+          <Property Name="DestinationUserID" Type="smallint" Nullable="false" />
+          <Property Name="Semaphore" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Company__User">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Company__UserCompany__Access">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyID" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="AccessCompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__Message__Destination">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="DestinationCompanyID" />
+              <PropertyRef Name="DestinationUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__Message__Source">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="SourceCompanyID" />
+              <PropertyRef Name="SourceUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserCompany">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserFavorite__FavoriteUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserFavorite" Type="Self.UserFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserFavorite">
+              <PropertyRef Name="FavoriteCompanyID" />
+              <PropertyRef Name="FavoriteUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserFavorite__User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserFavorite" Type="Self.UserFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserFavorite">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserNotification__Destination">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserNotification" Type="Self.UserNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserNotification">
+              <PropertyRef Name="DestinationCompanyID" />
+              <PropertyRef Name="DestinationUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserNotification__Source">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserNotification" Type="Self.UserNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserNotification">
+              <PropertyRef Name="SourceCompanyID" />
+              <PropertyRef Name="SourceUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="usp_Message_ListByUserAndDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SourceCompanyID" Type="tinyint" Mode="In" />
+          <Parameter Name="SourceUserID" Type="smallint" Mode="In" />
+          <Parameter Name="DestinationCompanyID" Type="tinyint" Mode="In" />
+          <Parameter Name="DestinationUserID" Type="smallint" Mode="In" />
+          <Parameter Name="Date" Type="date" Mode="In" />
+        </Function>
+        <Function Name="usp_Message_Send" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SourceCompanyID" Type="tinyint" Mode="In" />
+          <Parameter Name="SourceUserID" Type="smallint" Mode="In" />
+          <Parameter Name="DestinationCompanyID" Type="tinyint" Mode="In" />
+          <Parameter Name="DestinationUserID" Type="smallint" Mode="In" />
+          <Parameter Name="Text" Type="varchar" Mode="In" />
+          <Parameter Name="MessageID" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="usp_User_ListFavorites" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
+          <Parameter Name="UserID" Type="smallint" Mode="In" />
+        </Function>
+        <Function Name="usp_User_ListRecents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
+          <Parameter Name="UserID" Type="smallint" Mode="In" />
+          <Parameter Name="Date" Type="date" Mode="In" />
+          <Parameter Name="Quantity" Type="tinyint" Mode="In" />
+        </Function>
+        <EntityContainer Name="CSMessengerModelStoreContainer">
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Message" EntityType="Self.Message" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserCompany" EntityType="Self.UserCompany" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserFavorite" EntityType="Self.UserFavorite" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserNotification" EntityType="Self.UserNotification" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Company__User" Association="Self.FK__Company__User">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Company__UserCompany__Access" Association="Self.FK__Company__UserCompany__Access">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="UserCompany" EntitySet="UserCompany" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__Message__Destination" Association="Self.FK__User__Message__Destination">
+            <End Role="User" EntitySet="User" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__Message__Source" Association="Self.FK__User__Message__Source">
+            <End Role="User" EntitySet="User" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserCompany" Association="Self.FK__User__UserCompany">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserCompany" EntitySet="UserCompany" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserFavorite__FavoriteUser" Association="Self.FK__User__UserFavorite__FavoriteUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserFavorite" EntitySet="UserFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserFavorite__User" Association="Self.FK__User__UserFavorite__User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserFavorite" EntitySet="UserFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserNotification__Destination" Association="Self.FK__User__UserNotification__Destination">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserNotification" EntitySet="UserNotification" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserNotification__Source" Association="Self.FK__User__UserNotification__Source">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserNotification" EntitySet="UserNotification" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CSMessengerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CSMessengerContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Company" EntityType="CSMessengerModel.Company" />
+          <EntitySet Name="Message" EntityType="CSMessengerModel.Message" />
+          <FunctionImport Name="usp_Message_ListByUserAndDate" ReturnType="Collection(CSMessengerModel.usp_Message_ListByUserAndDate_Result)">
+            <Parameter Name="SourceCompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="SourceUserID" Mode="In" Type="Int16" />
+            <Parameter Name="DestinationCompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="DestinationUserID" Mode="In" Type="Int16" />
+            <Parameter Name="Date" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="UserFavorite" EntityType="CSMessengerModel.UserFavorite" />
+          <EntitySet Name="UserCompany" EntityType="CSMessengerModel.UserCompany" />
+          <AssociationSet Name="FK__Company__UserCompany__Access" Association="CSMessengerModel.FK__Company__UserCompany__Access">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="UserCompany" EntitySet="UserCompany" />
+          </AssociationSet>
+          <FunctionImport Name="usp_User_ListRecents" ReturnType="Collection(CSMessengerModel.usp_User_ListRecents_Result)">
+            <Parameter Name="CompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="UserID" Mode="In" Type="Int16" />
+            <Parameter Name="Date" Mode="In" Type="DateTime" />
+            <Parameter Name="Quantity" Mode="In" Type="Byte" />
+          </FunctionImport>
+          <EntitySet Name="User" EntityType="CSMessengerModel.User" />
+          <AssociationSet Name="FK__Company__User" Association="CSMessengerModel.FK__Company__User">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__Message__Source" Association="CSMessengerModel.FK__User__Message__Source">
+            <End Role="User" EntitySet="User" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserFavorite" Association="CSMessengerModel.FK__User__UserFavorite">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserFavorite" EntitySet="UserFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserCompany" Association="CSMessengerModel.FK__User__UserCompany">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserCompany" EntitySet="UserCompany" />
+          </AssociationSet>
+          <FunctionImport Name="usp_User_ListFavorites" ReturnType="Collection(CSMessengerModel.usp_User_ListFavorites_Result)">
+            <Parameter Name="CompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="UserID" Mode="In" Type="Int16" />
+          </FunctionImport>
+          <AssociationSet Name="FK__User__UserFavorite__FavoriteUser" Association="CSMessengerModel.FK__User__UserFavorite__FavoriteUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserFavorite" EntitySet="UserFavorite" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__Message__Destination" Association="CSMessengerModel.FK__User__Message__Destination">
+            <End Role="User" EntitySet="User" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <FunctionImport Name="usp_Message_Send">
+            <Parameter Name="SourceCompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="SourceUserID" Mode="In" Type="Int16" />
+            <Parameter Name="DestinationCompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="DestinationUserID" Mode="In" Type="Int16" />
+            <Parameter Name="Text" Mode="In" Type="String" />
+            <Parameter Name="MessageID" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="UserNotification" EntityType="CSMessengerModel.UserNotification" />
+          <AssociationSet Name="FK__User__UserNotification__Destination" Association="CSMessengerModel.FK__User__UserNotification__Destination">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserNotification" EntitySet="UserNotification" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User__UserNotification__Source" Association="CSMessengerModel.FK__User__UserNotification__Source">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserNotification" EntitySet="UserNotification" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="Byte" Nullable="false" />
+          <Property Name="Abbreviation" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DatabaseName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UsersGranted" Relationship="CSMessengerModel.FK__Company__UserCompany__Access" FromRole="Company" ToRole="UserCompany" />
+          <NavigationProperty Name="User" Relationship="CSMessengerModel.FK__Company__User" FromRole="Company" ToRole="User" />
+          <Property Name="Semaphore" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="MessageID" />
+          </Key>
+          <Property Name="MessageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" />
+          <Property Name="SourceCompanyID" Type="Byte" Nullable="false" />
+          <Property Name="SourceUserID" Type="Int16" Nullable="false" />
+          <Property Name="DestinationCompanyID" Type="Byte" Nullable="false" />
+          <Property Name="DestinationUserID" Type="Int16" Nullable="false" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SentDateTime" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="ReceivedDate" Type="DateTime" Precision="0" />
+          <Property Name="ReceivedTime" Type="Time" Precision="0" />
+          <Property Name="ReadedDateTime" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="SourceUser" Relationship="CSMessengerModel.FK__User__Message__Source" FromRole="Message" ToRole="User" />
+          <NavigationProperty Name="DestinationUser" Relationship="CSMessengerModel.FK__User__Message__Destination" FromRole="Message" ToRole="User" />
+        </EntityType>
+        <ComplexType Name="usp_Message_ListByUserAndDate_Result">
+          <Property Type="Time" Name="Time" Nullable="false" />
+          <Property Type="Byte" Name="DestinationCompanyID" Nullable="false" />
+          <Property Type="Int16" Name="DestinationUserID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="UserFavorite">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="FavoriteCompanyID" />
+            <PropertyRef Name="FavoriteUserID" />
+          </Key>
+          <Property Name="CompanyID" Type="Byte" Nullable="false" />
+          <Property Name="UserID" Type="Int16" Nullable="false" />
+          <Property Name="FavoriteCompanyID" Type="Byte" Nullable="false" />
+          <Property Name="FavoriteUserID" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="CSMessengerModel.FK__User__UserFavorite" FromRole="UserFavorite" ToRole="User" />
+          <NavigationProperty Name="FavoriteUser" Relationship="CSMessengerModel.FK__User__UserFavorite__FavoriteUser" FromRole="UserFavorite" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserCompany">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AccessCompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="Byte" Nullable="false" />
+          <Property Name="UserID" Type="Int16" Nullable="false" />
+          <Property Name="AccessCompanyID" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="CompanyGranted" Relationship="CSMessengerModel.FK__Company__UserCompany__Access" FromRole="UserCompany" ToRole="Company" />
+          <NavigationProperty Name="User" Relationship="CSMessengerModel.FK__User__UserCompany" FromRole="UserCompany" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__Company__UserCompany__Access">
+          <End Type="CSMessengerModel.Company" Role="Company" Multiplicity="1" />
+          <End Type="CSMessengerModel.UserCompany" Role="UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyID" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="AccessCompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="usp_User_ListRecents_Result">
+          <Property Type="Byte" Name="SourceCompanyID" Nullable="false" />
+          <Property Type="Int16" Name="SourceUserID" Nullable="false" />
+          <Property Type="Time" Name="MaxReceivedTime" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="CompanyID" Type="Byte" Nullable="false" />
+          <Property Name="UserID" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Company" Relationship="CSMessengerModel.FK__Company__User" FromRole="User" ToRole="Company" />
+          <NavigationProperty Name="MessagesSent" Relationship="CSMessengerModel.FK__User__Message__Source" FromRole="User" ToRole="Message" />
+          <NavigationProperty Name="FavoriteUsersParents" Relationship="CSMessengerModel.FK__User__UserFavorite" FromRole="User" ToRole="UserFavorite" />
+          <NavigationProperty Name="UserCompany" Relationship="CSMessengerModel.FK__User__UserCompany" FromRole="User" ToRole="UserCompany" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Semaphore" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="FavoritesUsers" Relationship="CSMessengerModel.FK__User__UserFavorite__FavoriteUser" FromRole="User" ToRole="UserFavorite" />
+          <NavigationProperty Name="MessagesReceived" Relationship="CSMessengerModel.FK__User__Message__Destination" FromRole="User" ToRole="Message" />
+          <NavigationProperty Name="UserNotification" Relationship="CSMessengerModel.FK__User__UserNotification__Destination" FromRole="User" ToRole="UserNotification" />
+          <NavigationProperty Name="UserNotification1" Relationship="CSMessengerModel.FK__User__UserNotification__Source" FromRole="User" ToRole="UserNotification" />
+        </EntityType>
+        <Association Name="FK__Company__User">
+          <End Type="CSMessengerModel.Company" Role="Company" Multiplicity="1" />
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__Message__Source">
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
+          <End Type="CSMessengerModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="SourceCompanyID" />
+              <PropertyRef Name="SourceUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserFavorite">
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
+          <End Type="CSMessengerModel.UserFavorite" Role="UserFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserFavorite">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserCompany">
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
+          <End Type="CSMessengerModel.UserCompany" Role="UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="usp_User_ListFavorites_Result">
+          <Property Type="Byte" Name="CompanyID" Nullable="false" />
+          <Property Type="String" Name="CompanyAbbreviation" Nullable="false" MaxLength="3" />
+          <Property Type="Int16" Name="UserID" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <Association Name="FK__User__UserFavorite__FavoriteUser">
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
+          <End Type="CSMessengerModel.UserFavorite" Role="UserFavorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserFavorite">
+              <PropertyRef Name="FavoriteCompanyID" />
+              <PropertyRef Name="FavoriteUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__Message__Destination">
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
+          <End Type="CSMessengerModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="DestinationCompanyID" />
+              <PropertyRef Name="DestinationUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="UserNotification">
+          <Key>
+            <PropertyRef Name="SourceCompanyID" />
+            <PropertyRef Name="SourceUserID" />
+            <PropertyRef Name="DestinationCompanyID" />
+            <PropertyRef Name="DestinationUserID" />
+          </Key>
+          <Property Name="SourceCompanyID" Type="Byte" Nullable="false" />
+          <Property Name="SourceUserID" Type="Int16" Nullable="false" />
+          <Property Name="DestinationCompanyID" Type="Byte" Nullable="false" />
+          <Property Name="DestinationUserID" Type="Int16" Nullable="false" />
+          <Property Name="Semaphore" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DestinationUser" Relationship="CSMessengerModel.FK__User__UserNotification__Destination" FromRole="UserNotification" ToRole="User" />
+          <NavigationProperty Name="SourceUser" Relationship="CSMessengerModel.FK__User__UserNotification__Source" FromRole="UserNotification" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__User__UserNotification__Destination">
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
+          <End Type="CSMessengerModel.UserNotification" Role="UserNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserNotification">
+              <PropertyRef Name="DestinationCompanyID" />
+              <PropertyRef Name="DestinationUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User__UserNotification__Source">
+          <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
+          <End Type="CSMessengerModel.UserNotification" Role="UserNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="CompanyID" />
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserNotification">
+              <PropertyRef Name="SourceCompanyID" />
+              <PropertyRef Name="SourceUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CSMessengerModelStoreContainer" CdmEntityContainer="CSMessengerContext">
+          <EntitySetMapping Name="Company">
+            <EntityTypeMapping TypeName="CSMessengerModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="Semaphore" ColumnName="Semaphore" />
+                <ScalarProperty Name="Abbreviation" ColumnName="Abbreviation" />
+                <ScalarProperty Name="DatabaseName" ColumnName="DatabaseName" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Message">
+            <EntityTypeMapping TypeName="CSMessengerModel.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="SentDateTime" ColumnName="SentDateTime" />
+                <ScalarProperty Name="ReadedDateTime" ColumnName="ReadedDateTime" />
+                <ScalarProperty Name="ReceivedTime" ColumnName="ReceivedTime" />
+                <ScalarProperty Name="ReceivedDate" ColumnName="ReceivedDate" />
+                <ScalarProperty Name="DestinationCompanyID" ColumnName="DestinationCompanyID" />
+                <ScalarProperty Name="SourceCompanyID" ColumnName="SourceCompanyID" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="DestinationUserID" ColumnName="DestinationUserID" />
+                <ScalarProperty Name="SourceUserID" ColumnName="SourceUserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_Message_ListByUserAndDate" FunctionName="CSMessengerModel.Store.usp_Message_ListByUserAndDate">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CSMessengerModel.usp_Message_ListByUserAndDate_Result">
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="DestinationCompanyID" ColumnName="DestinationCompanyID" />
+                <ScalarProperty Name="DestinationUserID" ColumnName="DestinationUserID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="UserFavorite">
+            <EntityTypeMapping TypeName="CSMessengerModel.UserFavorite">
+              <MappingFragment StoreEntitySet="UserFavorite">
+                <ScalarProperty Name="FavoriteUserID" ColumnName="FavoriteUserID" />
+                <ScalarProperty Name="FavoriteCompanyID" ColumnName="FavoriteCompanyID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCompany">
+            <EntityTypeMapping TypeName="CSMessengerModel.UserCompany">
+              <MappingFragment StoreEntitySet="UserCompany">
+                <ScalarProperty Name="AccessCompanyID" ColumnName="AccessCompanyID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_User_ListRecents" FunctionName="CSMessengerModel.Store.usp_User_ListRecents">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CSMessengerModel.usp_User_ListRecents_Result">
+                <ScalarProperty Name="SourceCompanyID" ColumnName="SourceCompanyID" />
+                <ScalarProperty Name="SourceUserID" ColumnName="SourceUserID" />
+                <ScalarProperty Name="MaxReceivedTime" ColumnName="MaxReceivedTime" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="CSMessengerModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Semaphore" ColumnName="Semaphore" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_User_ListFavorites" FunctionName="CSMessengerModel.Store.usp_User_ListFavorites">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CSMessengerModel.usp_User_ListFavorites_Result">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyAbbreviation" ColumnName="CompanyAbbreviation" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_Message_Send" FunctionName="CSMessengerModel.Store.usp_Message_Send" />
+          <EntitySetMapping Name="UserNotification">
+            <EntityTypeMapping TypeName="CSMessengerModel.UserNotification">
+              <MappingFragment StoreEntitySet="UserNotification">
+                <ScalarProperty Name="Semaphore" ColumnName="Semaphore" />
+                <ScalarProperty Name="DestinationUserID" ColumnName="DestinationUserID" />
+                <ScalarProperty Name="DestinationCompanyID" ColumnName="DestinationCompanyID" />
+                <ScalarProperty Name="SourceUserID" ColumnName="SourceUserID" />
+                <ScalarProperty Name="SourceCompanyID" ColumnName="SourceCompanyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

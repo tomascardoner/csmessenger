@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="da858d39bf344faebd3a740780f2a085" Name="Diagram1" DisplayType="false">
+        <EntityTypeShape EntityType="CSMessengerModel.Company" Width="1.5" PointX="0.75" PointY="6.125" />
+        <EntityTypeShape EntityType="CSMessengerModel.Message" Width="2.25" PointX="5.25" PointY="10.625" />
+        <EntityTypeShape EntityType="CSMessengerModel.UserFavorite" Width="2" PointX="8.25" PointY="11.125" />
+        <EntityTypeShape EntityType="CSMessengerModel.UserCompany" Width="1.75" PointX="7" PointY="14.375" />
+        <AssociationConnector Association="CSMessengerModel.FK__Company__UserCompany__Access" />
+        <EntityTypeShape EntityType="CSMessengerModel.User" Width="1.875" PointX="2.75" PointY="15.75" />
+        <AssociationConnector Association="CSMessengerModel.FK__Company__User" />
+        <AssociationConnector Association="CSMessengerModel.FK__User__Message__Source" />
+        <AssociationConnector Association="CSMessengerModel.FK__User__UserFavorite" />
+        <AssociationConnector Association="CSMessengerModel.FK__User__UserCompany" />
+        <AssociationConnector Association="CSMessengerModel.FK__User__UserFavorite__FavoriteUser" />
+        <AssociationConnector Association="CSMessengerModel.FK__User__Message__Destination" />
+        <EntityTypeShape EntityType="CSMessengerModel.UserNotification" Width="1.5" PointX="5.375" PointY="17.375" />
+        <AssociationConnector Association="CSMessengerModel.FK__User__UserNotification__Destination" />
+        <AssociationConnector Association="CSMessengerModel.FK__User__UserNotification__Source" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
