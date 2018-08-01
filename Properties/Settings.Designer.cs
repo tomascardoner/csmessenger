@@ -328,5 +328,14 @@ namespace CSMessenger.Properties {
                 return ((global::System.Drawing.Font)(this["MessageNew_Font"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public short UserListRecent_MaxDaysOfLastMessage {
+            get {
+                return ((short)(this["UserListRecent_MaxDaysOfLastMessage"]));
+            }
+        }
     }
 }

@@ -75,7 +75,7 @@
           <Property Name="SourceUserID" Type="smallint" Nullable="false" />
           <Property Name="DestinationCompanyID" Type="tinyint" Nullable="false" />
           <Property Name="DestinationUserID" Type="smallint" Nullable="false" />
-          <Property Name="Semaphore" Type="int" Nullable="false" />
+          <Property Name="LastMessageReceivedOn" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK__Company__User">
           <End Role="Company" Type="Self.Company" Multiplicity="1" />
@@ -214,15 +214,18 @@
           <Parameter Name="Text" Type="varchar" Mode="In" />
           <Parameter Name="MessageID" Type="int" Mode="InOut" />
         </Function>
-        <Function Name="usp_User_ListFavorites" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="usp_User_GetInfoFromCompanyDB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
           <Parameter Name="UserID" Type="smallint" Mode="In" />
         </Function>
-        <Function Name="usp_User_ListRecents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="usp_User_ListByLastMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
           <Parameter Name="UserID" Type="smallint" Mode="In" />
-          <Parameter Name="Date" Type="date" Mode="In" />
-          <Parameter Name="Quantity" Type="tinyint" Mode="In" />
+          <Parameter Name="MaxDays" Type="smallint" Mode="In" />
+        </Function>
+        <Function Name="usp_User_ListFavorites" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
+          <Parameter Name="UserID" Type="smallint" Mode="In" />
         </Function>
         <EntityContainer Name="CSMessengerModelStoreContainer">
           <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
@@ -288,12 +291,6 @@
             <End Role="Company" EntitySet="Company" />
             <End Role="UserCompany" EntitySet="UserCompany" />
           </AssociationSet>
-          <FunctionImport Name="usp_User_ListRecents" ReturnType="Collection(CSMessengerModel.usp_User_ListRecents_Result)">
-            <Parameter Name="CompanyID" Mode="In" Type="Byte" />
-            <Parameter Name="UserID" Mode="In" Type="Int16" />
-            <Parameter Name="Date" Mode="In" Type="DateTime" />
-            <Parameter Name="Quantity" Mode="In" Type="Byte" />
-          </FunctionImport>
           <EntitySet Name="User" EntityType="CSMessengerModel.User" />
           <AssociationSet Name="FK__Company__User" Association="CSMessengerModel.FK__Company__User">
             <End Role="Company" EntitySet="Company" />
@@ -340,6 +337,15 @@
             <End Role="User" EntitySet="User" />
             <End Role="UserNotification" EntitySet="UserNotification" />
           </AssociationSet>
+          <FunctionImport Name="usp_User_ListByLastMessage" ReturnType="Collection(CSMessengerModel.usp_User_ListByLastMessage_Result)">
+            <Parameter Name="CompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="UserID" Mode="In" Type="Int16" />
+            <Parameter Name="MaxDays" Mode="In" Type="Int16" />
+          </FunctionImport>
+          <FunctionImport Name="usp_User_GetInfoFromCompanyDB" ReturnType="Collection(String)">
+            <Parameter Name="CompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="UserID" Mode="In" Type="Int16" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Company">
           <Key>
@@ -537,9 +543,9 @@
           <Property Name="SourceUserID" Type="Int16" Nullable="false" />
           <Property Name="DestinationCompanyID" Type="Byte" Nullable="false" />
           <Property Name="DestinationUserID" Type="Int16" Nullable="false" />
-          <Property Name="Semaphore" Type="Int32" Nullable="false" />
           <NavigationProperty Name="DestinationUser" Relationship="CSMessengerModel.FK__User__UserNotification__Destination" FromRole="UserNotification" ToRole="User" />
           <NavigationProperty Name="SourceUser" Relationship="CSMessengerModel.FK__User__UserNotification__Source" FromRole="UserNotification" ToRole="User" />
+          <Property Name="LastMessageReceivedOn" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK__User__UserNotification__Destination">
           <End Type="CSMessengerModel.User" Role="User" Multiplicity="1" />
@@ -569,6 +575,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="usp_User_ListByLastMessage_Result">
+          <Property Type="Byte" Name="CompanyID" Nullable="false" />
+          <Property Type="Int16" Name="UserID" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -631,15 +642,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="usp_User_ListRecents" FunctionName="CSMessengerModel.Store.usp_User_ListRecents">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="CSMessengerModel.usp_User_ListRecents_Result">
-                <ScalarProperty Name="SourceCompanyID" ColumnName="SourceCompanyID" />
-                <ScalarProperty Name="SourceUserID" ColumnName="SourceUserID" />
-                <ScalarProperty Name="MaxReceivedTime" ColumnName="MaxReceivedTime" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="CSMessengerModel.User">
               <MappingFragment StoreEntitySet="User">
@@ -665,7 +667,7 @@
           <EntitySetMapping Name="UserNotification">
             <EntityTypeMapping TypeName="CSMessengerModel.UserNotification">
               <MappingFragment StoreEntitySet="UserNotification">
-                <ScalarProperty Name="Semaphore" ColumnName="Semaphore" />
+                <ScalarProperty Name="LastMessageReceivedOn" ColumnName="LastMessageReceivedOn" />
                 <ScalarProperty Name="DestinationUserID" ColumnName="DestinationUserID" />
                 <ScalarProperty Name="DestinationCompanyID" ColumnName="DestinationCompanyID" />
                 <ScalarProperty Name="SourceUserID" ColumnName="SourceUserID" />
@@ -673,6 +675,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_User_ListByLastMessage" FunctionName="CSMessengerModel.Store.usp_User_ListByLastMessage">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CSMessengerModel.usp_User_ListByLastMessage_Result">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_User_GetInfoFromCompanyDB" FunctionName="CSMessengerModel.Store.usp_User_GetInfoFromCompanyDB" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

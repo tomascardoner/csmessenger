@@ -73,27 +73,6 @@ namespace CSMessenger
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_Message_ListByUserAndDate_Result>("usp_Message_ListByUserAndDate", sourceCompanyIDParameter, sourceUserIDParameter, destinationCompanyIDParameter, destinationUserIDParameter, dateParameter);
         }
     
-        public virtual ObjectResult<usp_User_ListRecents_Result> usp_User_ListRecents(Nullable<byte> companyID, Nullable<short> userID, Nullable<System.DateTime> date, Nullable<byte> quantity)
-        {
-            var companyIDParameter = companyID.HasValue ?
-                new ObjectParameter("CompanyID", companyID) :
-                new ObjectParameter("CompanyID", typeof(byte));
-    
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(short));
-    
-            var dateParameter = date.HasValue ?
-                new ObjectParameter("Date", date) :
-                new ObjectParameter("Date", typeof(System.DateTime));
-    
-            var quantityParameter = quantity.HasValue ?
-                new ObjectParameter("Quantity", quantity) :
-                new ObjectParameter("Quantity", typeof(byte));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_User_ListRecents_Result>("usp_User_ListRecents", companyIDParameter, userIDParameter, dateParameter, quantityParameter);
-        }
-    
         public virtual ObjectResult<usp_User_ListFavorites_Result> usp_User_ListFavorites(Nullable<byte> companyID, Nullable<short> userID)
         {
             var companyIDParameter = companyID.HasValue ?
@@ -130,6 +109,36 @@ namespace CSMessenger
                 new ObjectParameter("Text", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_Message_Send", sourceCompanyIDParameter, sourceUserIDParameter, destinationCompanyIDParameter, destinationUserIDParameter, textParameter, messageID);
+        }
+    
+        public virtual ObjectResult<usp_User_ListByLastMessage_Result> usp_User_ListByLastMessage(Nullable<byte> companyID, Nullable<short> userID, Nullable<short> maxDays)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(byte));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(short));
+    
+            var maxDaysParameter = maxDays.HasValue ?
+                new ObjectParameter("MaxDays", maxDays) :
+                new ObjectParameter("MaxDays", typeof(short));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_User_ListByLastMessage_Result>("usp_User_ListByLastMessage", companyIDParameter, userIDParameter, maxDaysParameter);
+        }
+    
+        public virtual ObjectResult<string> usp_User_GetInfoFromCompanyDB(Nullable<byte> companyID, Nullable<short> userID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(byte));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(short));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_User_GetInfoFromCompanyDB", companyIDParameter, userIDParameter);
         }
     }
 }

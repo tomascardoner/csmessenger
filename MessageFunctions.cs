@@ -50,7 +50,7 @@ namespace CSMessenger
             }
         }
 
-        public bool LoadMessagesForUser(ref Controls.MessageList messageListControl, DateTime currentDate)
+        public bool LoadMessagesForUser(ref Controls.MessageList messageListControl)
         {
             byte destinationCompanyID = messageListControl.CompanyID;
             short destinationUserID = messageListControl.UserID;

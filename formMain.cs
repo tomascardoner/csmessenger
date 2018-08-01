@@ -12,11 +12,11 @@ namespace CSMessenger
         #region Declarations
 
         private byte mCompanyID;
-        private byte mCompanyCount;
         private short mUserID;
         private string mUserName;
-        private ListView mlistviewFavorites;
+
         private Controls.MessageList mMessageListControlCurrent;
+        private UserListFunctions mUserListFunctions;
         private MessageFunctions mMessageFunctions;
 
         #endregion
@@ -27,36 +27,14 @@ namespace CSMessenger
         {
             InitializeComponent();
 
-            // Resize and locate the window
-            Form theForm = this;
-            CS_Form.FitHeightToScreen(ref theForm);
-            CS_Form.SetOnRightSideOfScreen(ref theForm);
-            theForm = null;
-
-            Cursor.Current = Cursors.WaitCursor;
+            SetAppearance();
 
             // Check if CompanyID and UserID are specified in command-line arguments
-            if (args.Length == 2)
-            {
-                // Check if first command-line argument is a byte number
-                if (!byte.TryParse(args[0], out mCompanyID))
-                {
-                    MessageBox.Show("El primer parámetro especificado en la línea de comandos, no es un número de tipo byte (CompanyID).", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    System.Environment.Exit(1);
-                }
-
-                // Check if second command-line argument is a short number
-                if (!short.TryParse(args[1], out mUserID))
-                {
-                    MessageBox.Show("El segundo parámetro especificado en la línea de comandos, no es un número de tipo short (UserID).", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    System.Environment.Exit(1);
-                }
-            }
-            else
-            {
-                MessageBox.Show("No se han especificado los parámetros (CompanyID y UserID) en la línea de comandos.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (CheckCommandLineArguments(args) == false)
+            { 
                 System.Environment.Exit(1);
             }
+
 
             // Check Company and User in Databases
             UserFunctions UserForCheck = new UserFunctions();
@@ -70,22 +48,9 @@ namespace CSMessenger
             }
             UserForCheck = null;
 
-            SetAppearance();
-
-            // Create Companies Controls
-            UserListFunctions ListsOfUsers = new UserListFunctions();
-            ListsOfUsers.AddControlsToTabPage("listviewRecents", ref tabpageRecents, ref contextmenuMain, UserListDoubleClick);
-            mlistviewFavorites = ListsOfUsers.AddControlsToTabPage("listviewFavorites", ref tabpageFavorites, ref contextmenuFavorites, UserListDoubleClick);
-            ListsOfUsers.CreateCompanyControlsAndLoadUsers(mCompanyID, mUserID, ref tabUsers, ref contextmenuMain, UserListDoubleClick);
-            ListsOfUsers = null;
-            mCompanyCount = Convert.ToByte(tabUsers.TabPages.Count - 2);
-
-            // Load Favorites Users
-            mlistviewFavorites.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            if (UserFavoriteFunctions.LoadFavoritesToList(ref mlistviewFavorites, mCompanyID, mUserID, mCompanyCount) == false)
-            {
-                System.Environment.Exit(1);
-            }
+            // Load List of Recent Users
+            mUserListFunctions = new UserListFunctions();
+            mUserListFunctions.LoadListOfRecentUsers(mCompanyID, mUserID, ref listviewUsers);
 
             mMessageFunctions = new MessageFunctions(mCompanyID, mUserID);
 
@@ -103,12 +68,6 @@ namespace CSMessenger
         void formMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             // Destroy objects
-            if (mlistviewFavorites != null)
-            {
-                mlistviewFavorites.Dispose();
-                mlistviewFavorites = null;
-            }
-
             if (mMessageListControlCurrent != null)
             {
                 mMessageListControlCurrent.Dispose();
@@ -126,87 +85,64 @@ namespace CSMessenger
 
         private void SetAppearance()
         {
-            this.Text = My.Application.Info.Title + " - " + mUserName;
+            this.Text = My.Application.Info.Title;
 
-            // Add the user image to list
-            imagelistMain.Images.Add(CSMessenger.Properties.Resources.IMAGE_USER_CHAT_32);
+            Form theForm = this;
+            CS_Form.FitHeightToScreen(ref theForm);
+            CS_Form.SetOnRightSideOfScreen(ref theForm);
+            theForm = null;
 
             labelUserName.Font = My.Settings.UserInfo_Font;
             textboxMessageNew.Font = My.Settings.MessageNew_Font;
         }
 
+        private bool CheckCommandLineArguments(string[] args)
+        {
+            if (args.Length == 2)
+            {
+                // Check if first command-line argument is a byte number
+                if (!byte.TryParse(args[0], out mCompanyID))
+                {
+                    MessageBox.Show("El primer parámetro especificado en la línea de comandos, no es un número de tipo byte (CompanyID).", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                // Check if second command-line argument is a short number
+                if (!short.TryParse(args[1], out mUserID))
+                {
+                    MessageBox.Show("El segundo parámetro especificado en la línea de comandos, no es un número de tipo short (UserID).", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("No se han especificado los parámetros (CompanyID y UserID) en la línea de comandos.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
         #endregion
 
         #region EventHandlers
-        private void AddUserToFavoritesMenuClick(object sender, EventArgs e)
-        {
-            byte itemCompanyID;
-            short itemUserID;
-            string itemUserName;
-            if (GetUserInfoFromContextMenuClick(sender, out itemCompanyID, out itemUserID, out itemUserName))
-            {
-                Cursor.Current = Cursors.WaitCursor;
 
-                UserFavoriteFunctions.FavoriteAdd(ref mlistviewFavorites, mCompanyID, mUserID, itemCompanyID, itemUserID, mCompanyCount);
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        private void RemoveUserFromFavoritesClick(object sender, EventArgs e)
-        {
-            byte itemCompanyID;
-            short itemUserID;
-            string itemUserName;
-            if (GetUserInfoFromContextMenuClick(sender, out itemCompanyID, out itemUserID, out itemUserName))
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                UserFavoriteFunctions.FavoriteRemove(ref mlistviewFavorites, mCompanyID, mUserID, itemCompanyID, itemUserID);
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        private void ChatWithUserMenuClick(object sender, EventArgs e)
-        {
-            byte itemCompanyID;
-            short itemUserID;
-            string itemUserName;
-            if (GetUserInfoFromContextMenuClick(sender, out itemCompanyID, out itemUserID, out itemUserName))
-            {
-                Cursor.Current = Cursors.WaitCursor;
-
-                UserChatFunctions.ChatWithUser(ref panelUserInfoAndMessageListAndMessageNew, ref mMessageListControlCurrent, itemCompanyID, itemUserID, itemUserName, mMessageFunctions, datetimeDate.Value.Date);
-
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        private void UserListDoubleClick(object sender, EventArgs e)
+        private void UserChatClick(object sender, EventArgs e)
         {
             byte itemCompanyID;
             short itemUserID;
             string itemUserName;
             ListView listViewSource = sender as ListView;
-            if (GetUserInfoFromListViewItem(ref listViewSource, out itemCompanyID, out itemUserID, out itemUserName))
+            if (UserListFunctions.GetUserInfoFromListViewItem(ref listViewSource, out itemCompanyID, out itemUserID, out itemUserName))
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                UserChatFunctions.ChatWithUser(ref panelUserInfoAndMessageListAndMessageNew, ref mMessageListControlCurrent, itemCompanyID, itemUserID, itemUserName, mMessageFunctions, datetimeDate.Value.Date);
+                UserChatFunctions.ChatWithUser(ref panelUserInfoAndMessageListAndMessageNew, ref mMessageListControlCurrent, itemCompanyID, itemUserID, itemUserName, mMessageFunctions);
 
                 Cursor.Current = Cursors.Default;
             }
-
         }
 
-
-        private void DateChanged(object sender, EventArgs e)
-        {
-            if (mMessageFunctions.LoadMessagesForUser(ref mMessageListControlCurrent, datetimeDate.Value.Date))
-            {
-            }
-        }
 
         private void textboxMessageNew_GotFocus(object sender, EventArgs e)
         {
@@ -228,10 +164,6 @@ namespace CSMessenger
         {
             if (textboxMessageNew.Text.Trim().Length > 0)
             {
-                if (datetimeDate.Value.CompareTo(DateTime.Now.Date) != 0)
-                {
-                    datetimeDate.Value = DateTime.Now.Date;
-                }
                 if (mMessageFunctions.SendMessage(ref mMessageListControlCurrent, textboxMessageNew.Text.Trim()) == true)
                 {
                     textboxMessageNew.Text = "";
@@ -241,47 +173,23 @@ namespace CSMessenger
 
         #endregion
 
-        #region Extra stuff
-
-        private bool GetUserInfoFromContextMenuClick(object sender, out byte companyID, out short userID, out string userName)
+        private void NewChat(object sender, EventArgs e)
         {
-            // Gets the source ListView of the ContextMenu
-            ToolStripItem item = (sender as ToolStripItem);
-            if (item != null)
-            {
-                ContextMenuStrip owner = item.Owner as ContextMenuStrip;
-                if (owner != null)
-                {
-                    ListView listViewSource = owner.SourceControl as ListView;
+            //// Create Companies Controls
+            //UserListFunctions ListsOfUsers = new UserListFunctions();
+            ////ListsOfUsers.AddControlsToTabPage("listviewRecents", ref tabpageRecents, ref contextmenuMain, UserListDoubleClick);
+            ////mlistviewFavorites = ListsOfUsers.AddControlsToTabPage("listviewFavorites", ref tabpageFavorites, ref contextmenuFavorites, UserListDoubleClick);
+            ////ListsOfUsers.CreateCompanyControlsAndLoadUsers(mCompanyID, mUserID, ref tabUsers, ref contextmenuMain, UserListDoubleClick);
+            ////ListsOfUsers = null;
+            ////mCompanyCount = Convert.ToByte(tabUsers.TabPages.Count - 2);
 
-                    if (GetUserInfoFromListViewItem(ref listViewSource, out companyID, out userID, out userName))
-                    {
-                        return true;
-                    }
-                }
-            }
-            companyID = 0;
-            userID = 0;
-            userName = "";
-            return false;
+            //// Load Favorites Users
+            //mlistviewFavorites.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            //if (UserFavoriteFunctions.LoadFavoritesToList(ref mlistviewFavorites, mCompanyID, mUserID, mCompanyCount) == false)
+            //{
+            //    System.Environment.Exit(1);
+            //}
         }
 
-        private bool GetUserInfoFromListViewItem(ref ListView ListViewSource, out byte companyID, out short userID, out string userName)
-        {
-            if (ListViewSource.SelectedItems.Count > 0)
-            {
-                string[] Keys = ListViewSource.SelectedItems[0].Name.Substring(CS_Constants.KeyStringer.Length).Split(Convert.ToChar(CS_Constants.KeyDelimiter));
-                companyID = Convert.ToByte(Keys[0]);
-                userID = Convert.ToInt16(Keys[1]);
-                userName = ListViewSource.SelectedItems[0].Text;
-                return true;
-            }
-            companyID = 0;
-            userID = 0;
-            userName = "";
-            return false;
-        }
-
-        #endregion
     }
 }

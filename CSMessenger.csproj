@@ -134,6 +134,12 @@
     <Compile Include="formMain.Designer.cs">
       <DependentUpon>formMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="formUserLists.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formUserLists.Designer.cs">
+      <DependentUpon>formUserLists.cs</DependentUpon>
+    </Compile>
     <Compile Include="Message.cs">
       <DependentUpon>CSMessenger.tt</DependentUpon>
     </Compile>
@@ -163,6 +169,9 @@
     <Compile Include="usp_Message_ListByUserAndDate_Result.cs">
       <DependentUpon>CSMessenger.tt</DependentUpon>
     </Compile>
+    <Compile Include="usp_User_ListByLastMessage_Result.cs">
+      <DependentUpon>CSMessenger.tt</DependentUpon>
+    </Compile>
     <Compile Include="usp_User_ListFavorites_Result.cs">
       <DependentUpon>CSMessenger.tt</DependentUpon>
     </Compile>
@@ -186,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="formMain.resx">
       <DependentUpon>formMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="formUserLists.resx">
+      <DependentUpon>formUserLists.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">

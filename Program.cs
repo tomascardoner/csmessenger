@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CSMessenger
@@ -33,11 +30,6 @@ namespace CSMessenger
             CSMessengerContext.CreateConnectionString(CSMessenger.Properties.Settings.Default.DBConnection_Provider, pDatabase.connectionString);
 
             Application.Run(new formMain(args));
-        }
-
-        private static bool GetCurrentUser()
-        {
-            return true;
         }
     }
 }

@@ -10,17 +10,11 @@
 namespace CSMessenger
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class UserNotification
+    public partial class usp_User_ListByLastMessage_Result
     {
-        public byte SourceCompanyID { get; set; }
-        public short SourceUserID { get; set; }
-        public byte DestinationCompanyID { get; set; }
-        public short DestinationUserID { get; set; }
-        public System.DateTime LastMessageReceivedOn { get; set; }
-    
-        public virtual User DestinationUser { get; set; }
-        public virtual User SourceUser { get; set; }
+        public byte CompanyID { get; set; }
+        public short UserID { get; set; }
+        public string UserName { get; set; }
     }
 }

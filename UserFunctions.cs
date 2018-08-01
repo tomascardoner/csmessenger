@@ -98,97 +98,19 @@ namespace CSMessenger
         {
             try
             {
-                using (SqlConnection sqlconn = new SqlConnection())
+                System.Data.Entity.Core.Objects.ObjectResult<string> companyUsers = mdbContext.usp_User_GetInfoFromCompanyDB(mCompany.CompanyID, userID);
+                foreach (string companyUser in companyUsers)
                 {
-                    // Get DB connection properties and create ConnectionString
-                    CS_Database_SQL objDatabase = new CS_Database_SQL();
-                    objDatabase.applicationName = My.Application.Info.Title;
-                    objDatabase.datasource = CSMessenger.Properties.Settings.Default.DBConnection_Datasource;
-                    objDatabase.initialCatalog = mCompany.DatabaseName;
-                    objDatabase.userID = CSMessenger.Properties.Settings.Default.DBConnection_UserID;
-                    // Unencrypt database connection password
-                    CS_Encrypt_TripleDES PasswordDecrypter = new CS_Encrypt_TripleDES(CS_Constants.EncryptionPassword);
-                    objDatabase.password = PasswordDecrypter.Decrypt(CSMessenger.Properties.Settings.Default.DBConnection_Password);
-                    PasswordDecrypter = null;
-                    objDatabase.MultipleActiveResultsets = true;
-                    objDatabase.workstationID = Environment.MachineName;
-                    objDatabase.CreateConnectionString();
-
-                    // Create SQL Connection
-                    sqlconn.ConnectionString = objDatabase.connectionString;
-                    sqlconn.Open();
-
-                    // Create SQL Command
-                    SqlCommand sqlcmd = new SqlCommand();
-                    sqlcmd.Connection = sqlconn;
-                    sqlcmd.CommandText = "usp_Usuario_Data";
-                    sqlcmd.CommandType = CommandType.StoredProcedure;
-                    sqlcmd.Parameters.Add(new SqlParameter("@IDUsuario", userID));
-
-                    // Create SQL DataReader
-                    SqlDataReader sqldatrdr;
-                    sqldatrdr = sqlcmd.ExecuteReader();
-
-                    if (sqldatrdr.Read())
-                    {
-                        mUserNameOnCompanyDB = sqldatrdr["Nombre"].ToString();
-                        return true;
-                    }
-                    else
-                    {
-                        MessageBox.Show("El Usuario especificado en la línea de comandos, no existe en la base de datos de la Compañía.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
+                    mUserNameOnCompanyDB = companyUser;
+                    return true;
                 }
+                MessageBox.Show("El Usuario especificado en la línea de comandos, no existe en la base de datos de la Compañía.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
             catch (Exception e)
             {
                 MessageBox.Show(string.Format("Error leyendo los datos del Usuario desde la base de datos de la Compañía.{0}{0}Error #{1}: {2}", System.Environment.NewLine, e.HResult, e.Message), My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-
-        static public bool SetUserSemaphoreOnCompanyDatabase(byte companyID, short userID)
-        {
-            try
-            {
-                using (SqlConnection sqlconn = new SqlConnection())
-                {
-                    // Get DB connection properties and create ConnectionString
-                    CS_Database_SQL objDatabase = new CS_Database_SQL();
-                    objDatabase.applicationName = My.Application.Info.Title;
-                    objDatabase.datasource = CSMessenger.Properties.Settings.Default.DBConnection_Datasource;
-                    //objDatabase.initialCatalog = mCompany.DatabaseName;
-                    objDatabase.userID = CSMessenger.Properties.Settings.Default.DBConnection_UserID;
-                    // Unencrypt database connection password
-                    CS_Encrypt_TripleDES PasswordDecrypter = new CS_Encrypt_TripleDES(CS_Constants.EncryptionPassword);
-                    objDatabase.password = PasswordDecrypter.Decrypt(CSMessenger.Properties.Settings.Default.DBConnection_Password);
-                    PasswordDecrypter = null;
-                    objDatabase.MultipleActiveResultsets = true;
-                    objDatabase.workstationID = Environment.MachineName;
-                    objDatabase.CreateConnectionString();
-
-                    // Create SQL Connection
-                    sqlconn.ConnectionString = objDatabase.connectionString;
-                    sqlconn.Open();
-
-                    // Create SQL Command
-                    SqlCommand sqlcmd = new SqlCommand();
-                    sqlcmd.Connection = sqlconn;
-                    sqlcmd.CommandText = "usp_Usuario_Semaforo_Update";
-                    sqlcmd.CommandType = CommandType.StoredProcedure;
-                    sqlcmd.Parameters.Add(new SqlParameter("@IDUsuario", userID));
-                    sqlcmd.ExecuteNonQuery();
-
-                    return true;
-                }
-            }
-
-            catch (Exception e)
-            {
-                MessageBox.Show(string.Format("Error al enviar la notificación al Usuario de Destino en la base de datos de la Compañía.{0}{0}Error #{1}: {2}", System.Environment.NewLine, e.HResult, e.Message), My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
