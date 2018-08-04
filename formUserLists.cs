@@ -17,12 +17,48 @@ namespace CSMessenger
         private short mUserID;
         private ListView mlistviewFavorites;
 
-        public formUserLists()
+        public formUserLists(byte companyID, short userID)
         {
+            mCompanyID = companyID;
+            mUserID = userID;
+
             InitializeComponent();
+
+            SetAppearance();
 
             // Add the user image to list
             imagelistMain.Images.Add(CSMessenger.Properties.Resources.IMAGE_USER_CHAT_32);
+
+            // Create Companies Controls
+            UserListFunctions ListsOfUsers = new UserListFunctions();
+            mlistviewFavorites = ListsOfUsers.AddControlsToTabPage("listviewFavorites", ref tabpageFavorites, ref contextmenuFavorites, UserListDoubleClick);
+            ListsOfUsers.CreateCompanyControlsAndLoadUsers(mCompanyID, mUserID, ref tabUsers, ref contextmenuMain, UserListDoubleClick);
+            ListsOfUsers = null;
+            mCompanyCount = Convert.ToByte(tabUsers.TabPages.Count - 1);
+
+            // Load Favorites Users
+            mlistviewFavorites.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            if (UserFavoriteFunctions.LoadFavoritesToList(ref mlistviewFavorites, mCompanyID, mUserID, mCompanyCount) == false)
+            {
+                System.Environment.Exit(1);
+            }
+
+        }
+
+        private void SetAppearance()
+        {
+            Form theForm = this;
+            CS_Form.FitHeightToScreen(ref theForm);
+            CS_Form.SetOnRightSideOfScreen(ref theForm);
+            theForm = null;
+        }
+
+        private void UserListDoubleClick(object sender, EventArgs e)
+        {
+            ListView listViewSource = sender as ListView;
+
+            this.Tag = listViewSource.SelectedItems[0].Name;
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
         }
 
         private void AddUserToFavoritesMenuClick(object sender, EventArgs e)

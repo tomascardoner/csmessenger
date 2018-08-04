@@ -15,9 +15,13 @@ namespace CSMessenger
         private short mUserID;
         private string mUserName;
 
-        private Controls.MessageList mMessageListControlCurrent;
         private UserListFunctions mUserListFunctions;
+        private Controls.MessageList mMessageListControlCurrent;
         private MessageFunctions mMessageFunctions;
+
+        private Semaphores mSemaphores;
+
+        private formUserLists mformUserLists;
 
         #endregion
 
@@ -53,6 +57,8 @@ namespace CSMessenger
             mUserListFunctions.LoadListOfRecentUsers(mCompanyID, mUserID, ref listviewUsers);
 
             mMessageFunctions = new MessageFunctions(mCompanyID, mUserID);
+
+            mSemaphores = new Semaphores(mCompanyID, mUserID);
 
             Cursor.Current = Cursors.Default;
         }
@@ -127,6 +133,23 @@ namespace CSMessenger
 
         #region EventHandlers
 
+        private void TimerTick(object sender, EventArgs e)
+        {
+            // Check User Semaphore for changes
+            if (mSemaphores.UserChanged())
+            {
+
+            }
+
+            // Check UserNotifications
+
+            // Refresh MessageList
+
+            // Check Company Sempahore for changes
+
+            // Refresh User List for Company
+        }
+
         private void UserChatClick(object sender, EventArgs e)
         {
             byte itemCompanyID;
@@ -175,20 +198,15 @@ namespace CSMessenger
 
         private void NewChat(object sender, EventArgs e)
         {
-            //// Create Companies Controls
-            //UserListFunctions ListsOfUsers = new UserListFunctions();
-            ////ListsOfUsers.AddControlsToTabPage("listviewRecents", ref tabpageRecents, ref contextmenuMain, UserListDoubleClick);
-            ////mlistviewFavorites = ListsOfUsers.AddControlsToTabPage("listviewFavorites", ref tabpageFavorites, ref contextmenuFavorites, UserListDoubleClick);
-            ////ListsOfUsers.CreateCompanyControlsAndLoadUsers(mCompanyID, mUserID, ref tabUsers, ref contextmenuMain, UserListDoubleClick);
-            ////ListsOfUsers = null;
-            ////mCompanyCount = Convert.ToByte(tabUsers.TabPages.Count - 2);
+            if (mformUserLists == null)
+            {
+                mformUserLists = new formUserLists(mCompanyID, mUserID);
+            }
 
-            //// Load Favorites Users
-            //mlistviewFavorites.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            //if (UserFavoriteFunctions.LoadFavoritesToList(ref mlistviewFavorites, mCompanyID, mUserID, mCompanyCount) == false)
-            //{
-            //    System.Environment.Exit(1);
-            //}
+            if (mformUserLists.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            { 
+
+            }
         }
 
     }

@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.tabUsers = new Syncfusion.Windows.Forms.Tools.TabControlAdv();
-            this.tabpageRecents = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.tabpageFavorites = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
             this.imagelistMain = new System.Windows.Forms.ImageList(this.components);
             this.contextmenuFavorites = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -50,11 +49,10 @@
             this.tabUsers.ActiveTabFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.tabUsers.ActiveTabForeColor = System.Drawing.Color.Empty;
             this.tabUsers.Alignment = System.Windows.Forms.TabAlignment.Left;
-            this.tabUsers.BeforeTouchSize = new System.Drawing.Size(405, 527);
+            this.tabUsers.BeforeTouchSize = new System.Drawing.Size(300, 527);
             this.tabUsers.CloseButtonForeColor = System.Drawing.Color.Empty;
             this.tabUsers.CloseButtonHoverForeColor = System.Drawing.Color.Empty;
             this.tabUsers.CloseButtonPressedForeColor = System.Drawing.Color.Empty;
-            this.tabUsers.Controls.Add(this.tabpageRecents);
             this.tabUsers.Controls.Add(this.tabpageFavorites);
             this.tabUsers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabUsers.InActiveTabForeColor = System.Drawing.Color.Empty;
@@ -62,23 +60,11 @@
             this.tabUsers.Name = "tabUsers";
             this.tabUsers.SeparatorColor = System.Drawing.SystemColors.ControlDark;
             this.tabUsers.ShowSeparator = false;
-            this.tabUsers.Size = new System.Drawing.Size(405, 527);
+            this.tabUsers.Size = new System.Drawing.Size(300, 527);
             this.tabUsers.TabGap = 10;
             this.tabUsers.TabIndex = 5;
             this.tabUsers.TabPanelBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(199)))), ((int)(((byte)(216)))), ((int)(((byte)(237)))));
             this.tabUsers.TabStyle = typeof(Syncfusion.Windows.Forms.Tools.TabRendererOffice2007);
-            // 
-            // tabpageRecents
-            // 
-            this.tabpageRecents.Image = global::CSMessenger.Properties.Resources.IMAGE_RECENT_32;
-            this.tabpageRecents.ImageSize = new System.Drawing.Size(32, 32);
-            this.tabpageRecents.Location = new System.Drawing.Point(41, 1);
-            this.tabpageRecents.Name = "tabpageRecents";
-            this.tabpageRecents.ShowCloseButton = true;
-            this.tabpageRecents.Size = new System.Drawing.Size(362, 524);
-            this.tabpageRecents.TabIndex = 1;
-            this.tabpageRecents.Text = "Recientes";
-            this.tabpageRecents.ThemesEnabled = false;
             // 
             // tabpageFavorites
             // 
@@ -87,7 +73,7 @@
             this.tabpageFavorites.Location = new System.Drawing.Point(41, 1);
             this.tabpageFavorites.Name = "tabpageFavorites";
             this.tabpageFavorites.ShowCloseButton = true;
-            this.tabpageFavorites.Size = new System.Drawing.Size(362, 524);
+            this.tabpageFavorites.Size = new System.Drawing.Size(257, 524);
             this.tabpageFavorites.TabIndex = 2;
             this.tabpageFavorites.Text = "Favoritos";
             this.tabpageFavorites.ThemesEnabled = false;
@@ -112,12 +98,14 @@
             this.menuitemFavoritesChat.Name = "menuitemFavoritesChat";
             this.menuitemFavoritesChat.Size = new System.Drawing.Size(174, 22);
             this.menuitemFavoritesChat.Text = "Conversar";
+            this.menuitemFavoritesChat.Click += new System.EventHandler(this.ChatWithUserMenuClick);
             // 
             // menuitemFavoritesRemove
             // 
             this.menuitemFavoritesRemove.Name = "menuitemFavoritesRemove";
             this.menuitemFavoritesRemove.Size = new System.Drawing.Size(174, 22);
             this.menuitemFavoritesRemove.Text = "Quitar de Favoritos";
+            this.menuitemFavoritesRemove.Click += new System.EventHandler(this.RemoveUserFromFavoritesClick);
             // 
             // contextmenuMain
             // 
@@ -133,6 +121,7 @@
             this.menuitemMainChat.Name = "menuitemMainChat";
             this.menuitemMainChat.Size = new System.Drawing.Size(176, 22);
             this.menuitemMainChat.Text = "Conversar";
+            this.menuitemMainChat.Click += new System.EventHandler(this.ChatWithUserMenuClick);
             // 
             // menuitemMainAddFavorite
             // 
@@ -140,15 +129,17 @@
             this.menuitemMainAddFavorite.Name = "menuitemMainAddFavorite";
             this.menuitemMainAddFavorite.Size = new System.Drawing.Size(176, 22);
             this.menuitemMainAddFavorite.Text = "Agregar a Favoritos";
+            this.menuitemMainAddFavorite.Click += new System.EventHandler(this.AddUserToFavoritesMenuClick);
             // 
             // formUserLists
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 527);
+            this.ClientSize = new System.Drawing.Size(300, 527);
             this.Controls.Add(this.tabUsers);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "formUserLists";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Seleccione el Usuario";
             ((System.ComponentModel.ISupportInitialize)(this.tabUsers)).EndInit();
             this.tabUsers.ResumeLayout(false);
@@ -161,7 +152,6 @@
         #endregion
 
         private Syncfusion.Windows.Forms.Tools.TabControlAdv tabUsers;
-        private Syncfusion.Windows.Forms.Tools.TabPageAdv tabpageRecents;
         private Syncfusion.Windows.Forms.Tools.TabPageAdv tabpageFavorites;
         private System.Windows.Forms.ImageList imagelistMain;
         private System.Windows.Forms.ContextMenuStrip contextmenuFavorites;

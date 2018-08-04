@@ -24,7 +24,6 @@ namespace CSMessenger
         public byte CompanyID { get; set; }
         public string Abbreviation { get; set; }
         public string Name { get; set; }
-        public string DatabaseName { get; set; }
         public int Semaphore { get; set; }
         public bool IsActive { get; set; }
     

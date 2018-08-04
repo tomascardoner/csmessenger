@@ -110,7 +110,7 @@ namespace CSMessenger
 
             catch (Exception e)
             {
-                MessageBox.Show(string.Format("Error leyendo los datos del Usuario desde la base de datos de la Compañía.{0}{0}Error #{1}: {2}", System.Environment.NewLine, e.HResult, e.Message), My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error leyendo los datos del Usuario desde la base de datos de la Compañía.{0}{0}Error #{1}: {2}", System.Environment.NewLine, e.HResult, e.InnerException.Message), My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }

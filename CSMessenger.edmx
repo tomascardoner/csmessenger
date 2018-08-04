@@ -12,7 +12,6 @@
           <Property Name="CompanyID" Type="tinyint" Nullable="false" />
           <Property Name="Abbreviation" Type="varchar" MaxLength="3" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="DatabaseName" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="Semaphore" Type="int" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
@@ -354,7 +353,6 @@
           <Property Name="CompanyID" Type="Byte" Nullable="false" />
           <Property Name="Abbreviation" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DatabaseName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="UsersGranted" Relationship="CSMessengerModel.FK__Company__UserCompany__Access" FromRole="Company" ToRole="UserCompany" />
           <NavigationProperty Name="User" Relationship="CSMessengerModel.FK__Company__User" FromRole="Company" ToRole="User" />
           <Property Name="Semaphore" Type="Int32" Nullable="false" />
@@ -591,7 +589,6 @@
               <MappingFragment StoreEntitySet="Company">
                 <ScalarProperty Name="Semaphore" ColumnName="Semaphore" />
                 <ScalarProperty Name="Abbreviation" ColumnName="Abbreviation" />
-                <ScalarProperty Name="DatabaseName" ColumnName="DatabaseName" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />

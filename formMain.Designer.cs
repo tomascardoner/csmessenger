@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
             this.splitcontainerMain = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -40,6 +41,7 @@
             this.panelMessageNew = new System.Windows.Forms.TableLayoutPanel();
             this.buttonMessageSend = new System.Windows.Forms.Button();
             this.textboxMessageNew = new System.Windows.Forms.TextBox();
+            this.timerMain = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitcontainerMain)).BeginInit();
             this.splitcontainerMain.Panel1.SuspendLayout();
             this.splitcontainerMain.Panel2.SuspendLayout();
@@ -202,6 +204,10 @@
             this.textboxMessageNew.Enter += new System.EventHandler(this.textboxMessageNew_GotFocus);
             this.textboxMessageNew.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxMessageNew_KeyPress);
             // 
+            // timerMain
+            // 
+            this.timerMain.Tick += new System.EventHandler(this.TimerTick);
+            // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -241,6 +247,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ListView listviewUsers;
         private System.Windows.Forms.Button buttonNewChat;
+        private System.Windows.Forms.Timer timerMain;
     }
 }
 
