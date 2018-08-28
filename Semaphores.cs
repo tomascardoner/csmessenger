@@ -10,30 +10,43 @@ namespace CSMessenger
     {
         CSMessengerContext mdbContext;
 
-        // User
-        User mUser;
-        int mUserSemaphore;
-
-        // UserNotification
-        List<UserNotification> mUserNotifications;
-
         // Company
-        int mCompanySemaphore;
+        private Company mCompany;
+        private int mCompanySemaphore;
+
+        // User
+        private User mUser;
+        private int mUserSemaphore;
 
         public Semaphores(byte companyID, short userID)
         {
             mdbContext = new CSMessengerContext();
 
+            mCompany = mdbContext.Company.Find(companyID);
+            mCompanySemaphore = mCompany.Semaphore;
+
             mUser = mdbContext.User.Find(companyID, userID);
             mUserSemaphore = mUser.Semaphore;
-
-            mUserNotifications = mdbContext.UserNotification.Where(un => un.DestinationCompanyID == companyID && un.DestinationUserID == userID).ToList();
         }
 
-        public bool UserChanged()
+        public bool IsCompanyChanged()
+        {
+            mdbContext.Entry(mCompany).Reload();
+            if (mCompanySemaphore != mCompany.Semaphore)
+            {
+                mCompanySemaphore = mCompany.Semaphore;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsUserChanged()
         {
             mdbContext.Entry(mUser).Reload();
-            if (mUserSemaphore != mUser.Semaphore)
+            if (mUserSemaphore == 0 || mUserSemaphore != mUser.Semaphore)
             {
                 mUserSemaphore = mUser.Semaphore;
                 return true;

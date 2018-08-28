@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CSMessenger
@@ -16,6 +11,7 @@ namespace CSMessenger
         private byte mCompanyCount;
         private short mUserID;
         private ListView mlistviewFavorites;
+        private CSMessengerContext mdbContext = new CSMessengerContext();
 
         public formUserLists(byte companyID, short userID)
         {
@@ -32,16 +28,16 @@ namespace CSMessenger
             // Create Companies Controls
             UserListFunctions ListsOfUsers = new UserListFunctions();
             mlistviewFavorites = ListsOfUsers.AddControlsToTabPage("listviewFavorites", ref tabpageFavorites, ref contextmenuFavorites, UserListDoubleClick);
-            ListsOfUsers.CreateCompanyControlsAndLoadUsers(mCompanyID, mUserID, ref tabUsers, ref contextmenuMain, UserListDoubleClick);
+            ListsOfUsers.CreateCompanyControlsAndLoadUsers(mdbContext, mCompanyID, mUserID, ref tabUsers, ref contextmenuMain, UserListDoubleClick);
             ListsOfUsers = null;
             mCompanyCount = Convert.ToByte(tabUsers.TabPages.Count - 1);
 
             // Load Favorites Users
             mlistviewFavorites.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            if (UserFavoriteFunctions.LoadFavoritesToList(ref mlistviewFavorites, mCompanyID, mUserID, mCompanyCount) == false)
-            {
-                System.Environment.Exit(1);
-            }
+            //if (UserFavorite.LoadFavoritesToList(ref mlistviewFavorites, mCompanyID, mUserID, mCompanyCount) == false)
+            //{
+            //    System.Environment.Exit(1);
+            //}
 
         }
 
@@ -70,7 +66,10 @@ namespace CSMessenger
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                UserFavoriteFunctions.FavoriteAdd(ref mlistviewFavorites, mCompanyID, mUserID, itemCompanyID, itemUserID, mCompanyCount);
+                UserFavoriteFunctions.FavoriteAdd(mCompanyID, mUserID, itemCompanyID, itemUserID, mCompanyCount);
+
+                // Add item to Favorites List control for not to need to reload the entire list
+                //TODO: UserFavoriteFunctions.FavoriteAddListItem(ref listviewFavorites, favoriteCompanyID, companyAbbreviation, favoriteUserID, userName, companyCount);
 
                 Cursor.Current = Cursors.Default;
             }
@@ -85,7 +84,10 @@ namespace CSMessenger
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                UserFavoriteFunctions.FavoriteRemove(ref mlistviewFavorites, mCompanyID, mUserID, itemCompanyID, itemUserID);
+                UserFavoriteFunctions.FavoriteRemove(mCompanyID, mUserID, itemCompanyID, itemUserID);
+
+                // Remove item from Favorites List control for not to need to reload the entire list
+                //listiviewFavorites.Items[CS_Constants.KeyStringer + favoriteCompanyID + CS_Constants.KeyDelimiter + favoriteUserID].Remove();
 
                 Cursor.Current = Cursors.Default;
             }

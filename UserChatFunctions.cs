@@ -5,7 +5,7 @@ namespace CSMessenger
 {
     class UserChatFunctions
     {
-        static public void ChatWithUser(ref TableLayoutPanel panelUserInfoAndMessageListAndMessageNew, ref Controls.MessageList messageListControlCurrent, byte companyID, short userID, string userName, MessageFunctions messageFunctionsCurrent)
+        static public void ChatWithUser(TableLayoutPanel panelUserInfoAndMessageListAndMessageNew, ref Controls.MessageList messageListControlCurrent, Label labelUserName, Panel panelMessageList, byte companyID, short userID, string userName, ChatMessageList chatMessageListCurrent)
         {
             if (panelUserInfoAndMessageListAndMessageNew.Visible == false)
             {
@@ -17,13 +17,12 @@ namespace CSMessenger
                 messageListControlCurrent.Visible = false;
             }
 
-            panelUserInfoAndMessageListAndMessageNew.Controls["panelUserInfo"].Controls["labelUserName"].Text = userName;
-            Panel panelMessageList = panelUserInfoAndMessageListAndMessageNew.Controls["panelMessageList"] as Panel;
+            labelUserName.Text = userName;
 
             messageListControlCurrent = MessageListControlFunctions.GetMessageListControl(ref panelMessageList, companyID, userID);
             messageListControlCurrent.Visible = true;
 
-            if (messageFunctionsCurrent.LoadMessagesForUser(ref messageListControlCurrent))
+            if (chatMessageListCurrent.LoadMessagesForUser(messageListControlCurrent))
             {
             }
         }

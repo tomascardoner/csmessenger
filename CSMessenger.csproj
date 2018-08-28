@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSMessenger</RootNamespace>
     <AssemblyName>CSMessenger</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -80,21 +81,23 @@
     <Compile Include="..\..\..\..\..\Users\Tomas\Dropbox\Cardoner Sistemas\Framework\CSharp\CS_Form.cs">
       <Link>CS_Form.cs</Link>
     </Compile>
+    <Compile Include="ChatMessageList.cs" />
+    <Compile Include="ChatUserList.cs" />
     <Compile Include="Company.cs">
       <DependentUpon>CSMessenger.tt</DependentUpon>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="Controls\ContactItem.cs">
+    <Compile Include="Controls\UserItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ContactItem.Designer.cs">
-      <DependentUpon>ContactItem.cs</DependentUpon>
+    <Compile Include="Controls\UserItem.Designer.cs">
+      <DependentUpon>UserItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ContactItemList.cs">
+    <Compile Include="Controls\UserItemList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ContactItemList.Designer.cs">
-      <DependentUpon>ContactItemList.cs</DependentUpon>
+    <Compile Include="Controls\UserItemList.Designer.cs">
+      <DependentUpon>UserItemList.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\MessageItemReceived.cs">
       <SubType>UserControl</SubType>
@@ -144,7 +147,7 @@
     <Compile Include="Message.cs">
       <DependentUpon>CSMessenger.tt</DependentUpon>
     </Compile>
-    <Compile Include="MessageFunctions.cs" />
+    <Compile Include="ChatMessage.cs" />
     <Compile Include="MessageListControlFunctions.cs" />
     <Compile Include="My.cs">
       <SubType>Code</SubType>
@@ -177,14 +180,11 @@
     <Compile Include="usp_User_ListFavorites_Result.cs">
       <DependentUpon>CSMessenger.tt</DependentUpon>
     </Compile>
-    <Compile Include="usp_User_ListRecents_Result.cs">
-      <DependentUpon>CSMessenger.tt</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Controls\ContactItem.resx">
-      <DependentUpon>ContactItem.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\UserItem.resx">
+      <DependentUpon>UserItem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ContactItemList.resx">
-      <DependentUpon>ContactItemList.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\UserItemList.resx">
+      <DependentUpon>UserItemList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MessageItemReceived.resx">
       <DependentUpon>MessageItemReceived.cs</DependentUpon>

@@ -216,11 +216,13 @@
         <Function Name="usp_User_GetInfoFromCompanyDB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
           <Parameter Name="UserID" Type="smallint" Mode="In" />
+          <Parameter Name="UserName" Type="varchar" Mode="InOut" />
         </Function>
         <Function Name="usp_User_ListByLastMessage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
           <Parameter Name="UserID" Type="smallint" Mode="In" />
-          <Parameter Name="MaxDays" Type="smallint" Mode="In" />
+          <Parameter Name="PreviousReadDateTime" Type="datetime" Mode="In" />
+          <Parameter Name="CurrentReadDateTime" Type="datetime" Mode="InOut" />
         </Function>
         <Function Name="usp_User_ListFavorites" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="tinyint" Mode="In" />
@@ -336,14 +338,16 @@
             <End Role="User" EntitySet="User" />
             <End Role="UserNotification" EntitySet="UserNotification" />
           </AssociationSet>
+          <FunctionImport Name="usp_User_GetInfoFromCompanyDB">
+            <Parameter Name="CompanyID" Mode="In" Type="Byte" />
+            <Parameter Name="UserID" Mode="In" Type="Int16" />
+            <Parameter Name="UserName" Mode="InOut" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="usp_User_ListByLastMessage" ReturnType="Collection(CSMessengerModel.usp_User_ListByLastMessage_Result)">
             <Parameter Name="CompanyID" Mode="In" Type="Byte" />
             <Parameter Name="UserID" Mode="In" Type="Int16" />
-            <Parameter Name="MaxDays" Mode="In" Type="Int16" />
-          </FunctionImport>
-          <FunctionImport Name="usp_User_GetInfoFromCompanyDB" ReturnType="Collection(String)">
-            <Parameter Name="CompanyID" Mode="In" Type="Byte" />
-            <Parameter Name="UserID" Mode="In" Type="Int16" />
+            <Parameter Name="PreviousReadDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="CurrentReadDateTime" Mode="InOut" Type="DateTime" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Company">
@@ -418,11 +422,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="usp_User_ListRecents_Result">
-          <Property Type="Byte" Name="SourceCompanyID" Nullable="false" />
-          <Property Type="Int16" Name="SourceUserID" Nullable="false" />
-          <Property Type="Time" Name="MaxReceivedTime" Nullable="true" />
-        </ComplexType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="CompanyID" />
@@ -577,6 +576,7 @@
           <Property Type="Byte" Name="CompanyID" Nullable="false" />
           <Property Type="Int16" Name="UserID" Nullable="false" />
           <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="LastMessageReceivedOn" Nullable="false" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -672,16 +672,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_User_GetInfoFromCompanyDB" FunctionName="CSMessengerModel.Store.usp_User_GetInfoFromCompanyDB" />
           <FunctionImportMapping FunctionImportName="usp_User_ListByLastMessage" FunctionName="CSMessengerModel.Store.usp_User_ListByLastMessage">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CSMessengerModel.usp_User_ListByLastMessage_Result">
                 <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="LastMessageReceivedOn" ColumnName="LastMessageReceivedOn" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_User_GetInfoFromCompanyDB" FunctionName="CSMessengerModel.Store.usp_User_GetInfoFromCompanyDB" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

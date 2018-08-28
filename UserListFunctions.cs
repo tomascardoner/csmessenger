@@ -7,26 +7,31 @@ namespace CSMessenger
 {
     class UserListFunctions
     {
-        // Internal variables
-        private CSMessengerContext mdbContext = new CSMessengerContext();
-
-        public void LoadListOfRecentUsers(byte companyID, short userID, ref ListView listviewCurrent)
+        static public bool LoadListOfFavorites(ref ListView listviewFavorites, byte companyID, short userID, byte companyCount)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            CSMessengerContext dbContext = new CSMessengerContext();
 
-            listviewCurrent.SuspendLayout();
+            listviewFavorites.SuspendLayout();
 
-            foreach (CSMessenger.usp_User_ListByLastMessage_Result userCurrent in mdbContext.usp_User_ListByLastMessage(companyID, userID, My.Settings.UserListRecent_MaxDaysOfLastMessage))
+            listviewFavorites.Items.Clear();
+
+            try
             {
-                if (userCurrent.UserID != Constants.UserID_Administrator)
+                foreach (var item in dbContext.usp_User_ListFavorites(companyID, userID))
                 {
-                    AddUserItemToList(userCurrent.CompanyID, userCurrent.UserID, userCurrent.UserName, ref listviewCurrent);
+                    //UserFavoriteFunctions.FavoriteAdd(ref listviewFavorites, item.CompanyID, item.CompanyAbbreviation, item.UserID, item.UserName, companyCount);
                 }
             }
 
-            listviewCurrent.ResumeLayout();
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("No se pudo cargar la lista de Favoritos.{0}{0}Error #{1}: {2}", System.Environment.NewLine, ex.HResult, ex.Message), My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                listviewFavorites.ResumeLayout();
+                return false;
+            }
 
-            Cursor.Current = Cursors.Default;
+            listviewFavorites.ResumeLayout();
+            return true;
         }
 
         private void AddUserItemToList(byte companyID, short userID, string userName, ref ListView listviewCurrent)
@@ -34,9 +39,9 @@ namespace CSMessenger
             listviewCurrent.Items.Add(CS_Constants.KeyStringer + companyID + CS_Constants.KeyDelimiter + userID, userName, "");
         }
 
-        public void CreateCompanyControlsAndLoadUsers(byte companyID, short userID, ref TabControlAdv tabUsers, ref ContextMenuStrip contextmenuControl, EventHandler DoubleClickEventHandler)
+        public void CreateCompanyControlsAndLoadUsers(CSMessengerContext dbContext, byte companyID, short userID, ref TabControlAdv tabUsers, ref ContextMenuStrip contextmenuControl, EventHandler DoubleClickEventHandler)
         {
-            foreach (UserCompany UserCompanyCurrent in mdbContext.UserCompany.Where(uc => uc.CompanyID == companyID && uc.UserID == userID).OrderBy(uc => uc.CompanyGranted.Name))
+            foreach (UserCompany UserCompanyCurrent in dbContext.UserCompany.Where(uc => uc.CompanyID == companyID && uc.UserID == userID).OrderBy(uc => uc.CompanyGranted.Name))
             {
                 // Add a new Tab Page to the Tab control
                 TabPageAdv tabpageNew = new TabPageAdv(UserCompanyCurrent.CompanyGranted.Name);
@@ -46,7 +51,7 @@ namespace CSMessenger
                 ListView ListViewNew = AddControlsToTabPage(Constants.ListView_Company_Prefix + UserCompanyCurrent.CompanyID, ref tabpageNew, ref contextmenuControl, DoubleClickEventHandler);
 
                 // Load Users
-                LoadUsersOfCompany(companyID, userID, UserCompanyCurrent.AccessCompanyID, ref ListViewNew);
+                LoadUsersOfCompany(dbContext, companyID, userID, UserCompanyCurrent.AccessCompanyID, ref ListViewNew);
             }
         }
 
@@ -63,11 +68,11 @@ namespace CSMessenger
             return listviewNew;
         }
 
-        private void LoadUsersOfCompany(byte companyID, short userID, byte usersCompanyID, ref ListView listviewCurrent)
+        private void LoadUsersOfCompany(CSMessengerContext dbContext, byte companyID, short userID, byte usersCompanyID, ref ListView listviewCurrent)
         {
             listviewCurrent.SuspendLayout();
 
-            foreach (User UserCurrent in mdbContext.User.Where(u => u.CompanyID == usersCompanyID).OrderBy(u => u.Name))
+            foreach (User UserCurrent in dbContext.User.Where(u => u.CompanyID == usersCompanyID).OrderBy(u => u.Name))
             {
                 if (!(UserCurrent.UserID == Constants.UserID_Administrator || (usersCompanyID == companyID && UserCurrent.UserID == userID)))
                 {
@@ -88,10 +93,13 @@ namespace CSMessenger
                 userName = ListViewSource.SelectedItems[0].Text;
                 return true;
             }
-            companyID = 0;
-            userID = 0;
-            userName = "";
-            return false;
+            else
+            {
+                companyID = 0;
+                userID = 0;
+                userName = "";
+                return false;
+            }
         }
 
     }

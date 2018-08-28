@@ -15,11 +15,14 @@ namespace CSMessenger
         private short mUserID;
         private string mUserName;
 
-        private UserListFunctions mUserListFunctions;
-        private Controls.MessageList mMessageListControlCurrent;
-        private MessageFunctions mMessageFunctions;
+        private bool mPerformingTasks = false;
 
         private Semaphores mSemaphores;
+        private ChatUserList mChatUserList;
+
+        private Controls.MessageList mMessageListControlCurrent;
+        private ChatMessageList mChatMessageList;
+        private ChatMessage mChatMessage;
 
         private formUserLists mformUserLists;
 
@@ -39,7 +42,6 @@ namespace CSMessenger
                 System.Environment.Exit(1);
             }
 
-
             // Check Company and User in Databases
             UserFunctions UserForCheck = new UserFunctions();
             if (UserForCheck.CheckCompany(mCompanyID) == false)
@@ -52,18 +54,19 @@ namespace CSMessenger
             }
             UserForCheck = null;
 
-            // Load List of Recent Users
-            mUserListFunctions = new UserListFunctions();
-            mUserListFunctions.LoadListOfRecentUsers(mCompanyID, mUserID, ref listviewUsers);
-
-            mMessageFunctions = new MessageFunctions(mCompanyID, mUserID);
-
+            mChatUserList = new ChatUserList();
+            mChatMessageList = new ChatMessageList(mCompanyID, mUserID);
+            mChatMessage = new ChatMessage(mCompanyID, mUserID);
             mSemaphores = new Semaphores(mCompanyID, mUserID);
+
+            timerMain.Interval = My.Settings.RefreshTimer_IntervalInMilliseconds;
+            timerMain.Enabled = true;
+            TimerTick(timerMain, new EventArgs());
 
             Cursor.Current = Cursors.Default;
         }
 
-        private void formMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MessageBox.Show(this, "¿Desea salir de la aplicación?", My.Application.Info.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
             {
@@ -71,7 +74,7 @@ namespace CSMessenger
             }
         }
 
-        void formMain_FormClosed(object sender, FormClosedEventArgs e)
+        void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             // Destroy objects
             if (mMessageListControlCurrent != null)
@@ -80,7 +83,16 @@ namespace CSMessenger
                 mMessageListControlCurrent = null;
             }
 
-            mMessageFunctions = null;
+            mSemaphores = null;
+            mChatUserList = null;
+            mChatMessageList = null;
+            mChatMessage = null;
+
+            if (mMessageListControlCurrent != null)
+            {
+                mformUserLists.Dispose();
+                mformUserLists = null;
+            }
 
             foreach (Controls.MessageList messageListCurrent in panelMessageList.Controls)
             {
@@ -135,39 +147,43 @@ namespace CSMessenger
 
         private void TimerTick(object sender, EventArgs e)
         {
-            // Check User Semaphore for changes
-            if (mSemaphores.UserChanged())
+            if (mPerformingTasks == false)
             {
+                mPerformingTasks = true;
 
+                // Check Company Sempahore for changes
+                if (mSemaphores.IsCompanyChanged())
+                {
+                    // Refresh User List for Company
+                }
+
+                // Check User Semaphore for changes
+                if (mSemaphores.IsUserChanged())
+                {
+                    // Refresh Users list after check UserNotification table
+                    mChatUserList.RefreshListUsers(mCompanyID, mUserID, useritemlistMain);
+
+                    // Refresh MessageList
+                }
+
+                mPerformingTasks = false;
             }
-
-            // Check UserNotifications
-
-            // Refresh MessageList
-
-            // Check Company Sempahore for changes
-
-            // Refresh User List for Company
         }
 
         private void UserChatClick(object sender, EventArgs e)
         {
-            byte itemCompanyID;
-            short itemUserID;
-            string itemUserName;
-            ListView listViewSource = sender as ListView;
-            if (UserListFunctions.GetUserInfoFromListViewItem(ref listViewSource, out itemCompanyID, out itemUserID, out itemUserName))
+            if (useritemlistMain.SelectedItem != null)
             {
                 Cursor.Current = Cursors.WaitCursor;
 
-                UserChatFunctions.ChatWithUser(ref panelUserInfoAndMessageListAndMessageNew, ref mMessageListControlCurrent, itemCompanyID, itemUserID, itemUserName, mMessageFunctions);
+                UserChatFunctions.ChatWithUser(panelUserInfoAndMessageListAndMessageNew, ref mMessageListControlCurrent,labelUserName,panelMessageList, useritemlistMain.SelectedItem.CompanyID, useritemlistMain.SelectedItem.UserID, useritemlistMain.SelectedItem.UserName, mChatMessageList);
 
                 Cursor.Current = Cursors.Default;
             }
         }
 
 
-        private void textboxMessageNew_GotFocus(object sender, EventArgs e)
+        private void TextboxMessageNew_GotFocus(object sender, EventArgs e)
         {
             (sender as TextBox).SelectAll();
         }
@@ -187,8 +203,9 @@ namespace CSMessenger
         {
             if (textboxMessageNew.Text.Trim().Length > 0)
             {
-                if (mMessageFunctions.SendMessage(ref mMessageListControlCurrent, textboxMessageNew.Text.Trim()) == true)
+                if (mChatMessage.SendMessage(mMessageListControlCurrent, textboxMessageNew.Text.Trim()) == true)
                 {
+                    // mChatUserList.SetUserOnTop(mMessageListControlCurrent.CompanyID, mMessageListControlCurrent.UserID);
                     textboxMessageNew.Text = "";
                 }
             }

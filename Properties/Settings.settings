@@ -24,7 +24,7 @@
       <Value Profile="(Default)">Moccasin</Value>
     </Setting>
     <Setting Name="MessageList_OnMemoryMaxCount" Type="System.Byte" Scope="Application">
-      <Value Profile="(Default)">3</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="MessageReceived_Time_Font" Type="System.Drawing.Font" Scope="Application">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
@@ -104,8 +104,35 @@
     <Setting Name="MessageNew_Font" Type="System.Drawing.Font" Scope="Application">
       <Value Profile="(Default)">Microsoft Sans Serif, 9.75pt</Value>
     </Setting>
-    <Setting Name="UserListRecent_MaxDaysOfLastMessage" Type="System.Int16" Scope="Application">
-      <Value Profile="(Default)">100</Value>
+    <Setting Name="UserList_UserWithNewMessages_Font" Type="System.Drawing.Font" Scope="Application">
+      <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt, style=Bold</Value>
+    </Setting>
+    <Setting Name="UserList_UserWithNewMessages_ForeColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">SteelBlue</Value>
+    </Setting>
+    <Setting Name="UserList_UserWithOldMessages_Font" Type="System.Drawing.Font" Scope="Application">
+      <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
+    </Setting>
+    <Setting Name="UserList_UserWithOldMessages_ForeColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="RefreshTimer_IntervalInMilliseconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="UserList_UserWithNewMessages_Status_BackColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="UserList_BackColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">White</Value>
+    </Setting>
+    <Setting Name="UserList_UserWithOldMessages_Status_BackColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Transparent</Value>
+    </Setting>
+    <Setting Name="UserList_ItemUnselected_BackColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">White</Value>
+    </Setting>
+    <Setting Name="UserList_ItemSelected_BackColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">LightBlue</Value>
     </Setting>
   </Settings>
 </SettingsFile>

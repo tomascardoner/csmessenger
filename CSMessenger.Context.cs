@@ -111,7 +111,7 @@ namespace CSMessenger
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_Message_Send", sourceCompanyIDParameter, sourceUserIDParameter, destinationCompanyIDParameter, destinationUserIDParameter, textParameter, messageID);
         }
     
-        public virtual ObjectResult<usp_User_ListByLastMessage_Result> usp_User_ListByLastMessage(Nullable<byte> companyID, Nullable<short> userID, Nullable<short> maxDays)
+        public virtual int usp_User_GetInfoFromCompanyDB(Nullable<byte> companyID, Nullable<short> userID, ObjectParameter userName)
         {
             var companyIDParameter = companyID.HasValue ?
                 new ObjectParameter("CompanyID", companyID) :
@@ -121,14 +121,10 @@ namespace CSMessenger
                 new ObjectParameter("UserID", userID) :
                 new ObjectParameter("UserID", typeof(short));
     
-            var maxDaysParameter = maxDays.HasValue ?
-                new ObjectParameter("MaxDays", maxDays) :
-                new ObjectParameter("MaxDays", typeof(short));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_User_ListByLastMessage_Result>("usp_User_ListByLastMessage", companyIDParameter, userIDParameter, maxDaysParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_User_GetInfoFromCompanyDB", companyIDParameter, userIDParameter, userName);
         }
     
-        public virtual ObjectResult<string> usp_User_GetInfoFromCompanyDB(Nullable<byte> companyID, Nullable<short> userID)
+        public virtual ObjectResult<usp_User_ListByLastMessage_Result> usp_User_ListByLastMessage(Nullable<byte> companyID, Nullable<short> userID, Nullable<System.DateTime> previousReadDateTime, ObjectParameter currentReadDateTime)
         {
             var companyIDParameter = companyID.HasValue ?
                 new ObjectParameter("CompanyID", companyID) :
@@ -138,7 +134,11 @@ namespace CSMessenger
                 new ObjectParameter("UserID", userID) :
                 new ObjectParameter("UserID", typeof(short));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_User_GetInfoFromCompanyDB", companyIDParameter, userIDParameter);
+            var previousReadDateTimeParameter = previousReadDateTime.HasValue ?
+                new ObjectParameter("PreviousReadDateTime", previousReadDateTime) :
+                new ObjectParameter("PreviousReadDateTime", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_User_ListByLastMessage_Result>("usp_User_ListByLastMessage", companyIDParameter, userIDParameter, previousReadDateTimeParameter, currentReadDateTime);
         }
     }
 }

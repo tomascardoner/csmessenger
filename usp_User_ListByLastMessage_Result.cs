@@ -16,5 +16,6 @@ namespace CSMessenger
         public byte CompanyID { get; set; }
         public short UserID { get; set; }
         public string UserName { get; set; }
+        public System.DateTime LastMessageReceivedOn { get; set; }
     }
 }

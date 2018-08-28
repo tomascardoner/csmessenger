@@ -32,8 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
             this.splitcontainerMain = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.listviewUsers = new System.Windows.Forms.ListView();
             this.buttonNewChat = new System.Windows.Forms.Button();
+            this.useritemlistMain = new CSMessenger.Controls.UserItemList();
             this.panelUserInfoAndMessageListAndMessageNew = new System.Windows.Forms.TableLayoutPanel();
             this.panelUserInfo = new System.Windows.Forms.TableLayoutPanel();
             this.labelUserName = new System.Windows.Forms.Label();
@@ -77,8 +77,8 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.listviewUsers, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.buttonNewChat, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.useritemlistMain, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -87,17 +87,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(233, 499);
             this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // listviewUsers
-            // 
-            this.listviewUsers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listviewUsers.Location = new System.Drawing.Point(3, 33);
-            this.listviewUsers.Name = "listviewUsers";
-            this.listviewUsers.Size = new System.Drawing.Size(227, 463);
-            this.listviewUsers.TabIndex = 1;
-            this.listviewUsers.UseCompatibleStateImageBehavior = false;
-            this.listviewUsers.View = System.Windows.Forms.View.Tile;
-            this.listviewUsers.Click += new System.EventHandler(this.UserChatClick);
             // 
             // buttonNewChat
             // 
@@ -109,6 +98,17 @@
             this.buttonNewChat.Text = "Nuevo chat...";
             this.buttonNewChat.UseVisualStyleBackColor = true;
             this.buttonNewChat.Click += new System.EventHandler(this.NewChat);
+            // 
+            // useritemlistMain
+            // 
+            this.useritemlistMain.BackColor = System.Drawing.SystemColors.Window;
+            this.useritemlistMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.useritemlistMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.useritemlistMain.Location = new System.Drawing.Point(3, 33);
+            this.useritemlistMain.Name = "useritemlistMain";
+            this.useritemlistMain.Size = new System.Drawing.Size(227, 463);
+            this.useritemlistMain.TabIndex = 3;
+            this.useritemlistMain.SelectedItemChanged += new System.EventHandler(this.UserChatClick);
             // 
             // panelUserInfoAndMessageListAndMessageNew
             // 
@@ -201,11 +201,12 @@
             this.textboxMessageNew.Size = new System.Drawing.Size(398, 34);
             this.textboxMessageNew.TabIndex = 1;
             this.textboxMessageNew.TextChanged += new System.EventHandler(this.textboxMessageNew_TextChanged);
-            this.textboxMessageNew.Enter += new System.EventHandler(this.textboxMessageNew_GotFocus);
+            this.textboxMessageNew.Enter += new System.EventHandler(this.TextboxMessageNew_GotFocus);
             this.textboxMessageNew.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textboxMessageNew_KeyPress);
             // 
             // timerMain
             // 
+            this.timerMain.Interval = 1000;
             this.timerMain.Tick += new System.EventHandler(this.TimerTick);
             // 
             // formMain
@@ -218,8 +219,8 @@
             this.Name = "formMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Title";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formMain_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.formMain_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
             this.splitcontainerMain.Panel1.ResumeLayout(false);
             this.splitcontainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitcontainerMain)).EndInit();
@@ -245,9 +246,9 @@
         private System.Windows.Forms.TableLayoutPanel panelUserInfo;
         private System.Windows.Forms.Label labelUserName;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.ListView listviewUsers;
         private System.Windows.Forms.Button buttonNewChat;
         private System.Windows.Forms.Timer timerMain;
+        private Controls.UserItemList useritemlistMain;
     }
 }
 

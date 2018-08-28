@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -98,14 +99,18 @@ namespace CSMessenger
         {
             try
             {
-                System.Data.Entity.Core.Objects.ObjectResult<string> companyUsers = mdbContext.usp_User_GetInfoFromCompanyDB(mCompany.CompanyID, userID);
-                foreach (string companyUser in companyUsers)
+                ObjectParameter companyUserName = new System.Data.Entity.Core.Objects.ObjectParameter("UserName", typeof(String));
+                mdbContext.usp_User_GetInfoFromCompanyDB(mCompany.CompanyID, userID, companyUserName);
+                if(companyUserName != null)
                 {
-                    mUserNameOnCompanyDB = companyUser;
+                    mUserNameOnCompanyDB = Convert.ToString(companyUserName.Value);
                     return true;
                 }
-                MessageBox.Show("El Usuario especificado en la línea de comandos, no existe en la base de datos de la Compañía.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                else
+                {
+                    MessageBox.Show("El Usuario especificado en la línea de comandos, no existe en la base de datos de la Compañía.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
             }
 
             catch (Exception e)

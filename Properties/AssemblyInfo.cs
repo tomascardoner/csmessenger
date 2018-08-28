@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CS-Messenger 2018")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Internal company chat application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cardoner Sistemas")]
 [assembly: AssemblyProduct("CS-Messenger")]
@@ -33,4 +33,3 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.0")]

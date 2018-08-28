@@ -12,7 +12,7 @@ namespace CSMessenger.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -88,7 +88,7 @@ namespace CSMessenger.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public byte MessageList_OnMemoryMaxCount {
             get {
                 return ((byte)(this["MessageList_OnMemoryMaxCount"]));
@@ -331,10 +331,91 @@ namespace CSMessenger.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public short UserListRecent_MaxDaysOfLastMessage {
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt, style=Bold")]
+        public global::System.Drawing.Font UserList_UserWithNewMessages_Font {
             get {
-                return ((short)(this["UserListRecent_MaxDaysOfLastMessage"]));
+                return ((global::System.Drawing.Font)(this["UserList_UserWithNewMessages_Font"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SteelBlue")]
+        public global::System.Drawing.Color UserList_UserWithNewMessages_ForeColor {
+            get {
+                return ((global::System.Drawing.Color)(this["UserList_UserWithNewMessages_ForeColor"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        public global::System.Drawing.Font UserList_UserWithOldMessages_Font {
+            get {
+                return ((global::System.Drawing.Font)(this["UserList_UserWithOldMessages_Font"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color UserList_UserWithOldMessages_ForeColor {
+            get {
+                return ((global::System.Drawing.Color)(this["UserList_UserWithOldMessages_ForeColor"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        public int RefreshTimer_IntervalInMilliseconds {
+            get {
+                return ((int)(this["RefreshTimer_IntervalInMilliseconds"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color UserList_UserWithNewMessages_Status_BackColor {
+            get {
+                return ((global::System.Drawing.Color)(this["UserList_UserWithNewMessages_Status_BackColor"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("White")]
+        public global::System.Drawing.Color UserList_BackColor {
+            get {
+                return ((global::System.Drawing.Color)(this["UserList_BackColor"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Transparent")]
+        public global::System.Drawing.Color UserList_UserWithOldMessages_Status_BackColor {
+            get {
+                return ((global::System.Drawing.Color)(this["UserList_UserWithOldMessages_Status_BackColor"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("White")]
+        public global::System.Drawing.Color UserList_ItemUnselected_BackColor {
+            get {
+                return ((global::System.Drawing.Color)(this["UserList_ItemUnselected_BackColor"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LightBlue")]
+        public global::System.Drawing.Color UserList_ItemSelected_BackColor {
+            get {
+                return ((global::System.Drawing.Color)(this["UserList_ItemSelected_BackColor"]));
             }
         }
     }
