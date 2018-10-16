@@ -21,7 +21,7 @@ namespace CSMessenger
             pDatabase.initialCatalog = CSMessenger.Properties.Settings.Default.DBConnection_Database;
             pDatabase.userID = CSMessenger.Properties.Settings.Default.DBConnection_UserID;
             // Unencrypt database connection password
-            CS_Encrypt_TripleDES PasswordDecrypter = new CS_Encrypt_TripleDES(CS_Constants.EncryptionPassword);
+            CS_Encrypt_TripleDES PasswordDecrypter = new CS_Encrypt_TripleDES(CS_Constants.DatabasePasswordEncryptionPassword);
             pDatabase.password = PasswordDecrypter.Decrypt(CSMessenger.Properties.Settings.Default.DBConnection_Password);
             PasswordDecrypter = null;
             pDatabase.MultipleActiveResultsets = true;

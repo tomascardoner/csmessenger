@@ -15,7 +15,7 @@
       <Value Profile="(Default)">sa</Value>
     </Setting>
     <Setting Name="DBConnection_Password" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">43ubKjbAQCxR+foIcEK/PcLRw0VHFqfd</Value>
+      <Value Profile="(Default)">SGI7w5kh5h8CavwOSyQv/UrKOeDP795S</Value>
     </Setting>
     <Setting Name="UserInfo_Font" Type="System.Drawing.Font" Scope="Application">
       <Value Profile="(Default)">Microsoft Sans Serif, 9.75pt, style=Bold</Value>
@@ -24,7 +24,7 @@
       <Value Profile="(Default)">Moccasin</Value>
     </Setting>
     <Setting Name="MessageList_OnMemoryMaxCount" Type="System.Byte" Scope="Application">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="MessageReceived_Time_Font" Type="System.Drawing.Font" Scope="Application">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>

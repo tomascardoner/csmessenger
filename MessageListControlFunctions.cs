@@ -1,6 +1,5 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Linq;
+﻿using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace CSMessenger
 {
@@ -27,6 +26,7 @@ namespace CSMessenger
                 if ((MessageListCurrent.CompanyID == companyID) && (MessageListCurrent.UserID == userID))
                 {
                     // Control exist
+                    Debug.Print("MessageList Control already exists for current user.");
                     return MessageListCurrent;
                 }
             }
@@ -35,6 +35,7 @@ namespace CSMessenger
             if (panelMessageList.Controls.Count < My.Settings.MessageList_OnMemoryMaxCount)
             {
                 // Create a new Control to hold the messages for this User
+                Debug.Print("Create a new MessageList Control for the user.");
                 return CreateMessageListControl(ref panelMessageList, companyID, userID);
             }
             else
@@ -45,6 +46,8 @@ namespace CSMessenger
                     MessageListLastUpdated.CompanyID = companyID;
                     MessageListLastUpdated.UserID = userID;
                     MessageListLastUpdated.panelMessages.Controls.Clear();
+
+                    Debug.Print("Reuse a MessageList Control because the MessageList_OnMemoryMaxCount setting has been reached.");
                     return MessageListLastUpdated;
                 }
                 else
