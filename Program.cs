@@ -21,8 +21,16 @@ namespace CSMessenger
             pDatabase.initialCatalog = CSMessenger.Properties.Settings.Default.DBConnection_Database;
             pDatabase.userID = CSMessenger.Properties.Settings.Default.DBConnection_UserID;
             // Unencrypt database connection password
-            CS_Encrypt_TripleDES PasswordDecrypter = new CS_Encrypt_TripleDES(CS_Constants.DatabasePasswordEncryptionPassword);
-            pDatabase.password = PasswordDecrypter.Decrypt(CSMessenger.Properties.Settings.Default.DBConnection_Password);
+            CS_Encrypt_TripleDES PasswordDecrypter = new CS_Encrypt_TripleDES(CS_Constants.UserEncryptionPassword);
+            string tempPassword = "";
+            if (PasswordDecrypter.Decrypt(CSMessenger.Properties.Settings.Default.DBConnection_Password, ref tempPassword) == false)
+            {
+                MessageBox.Show("La contraseña encriptada del usuario de conexión a la base de datos es incorrecta.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                pDatabase = null;
+                PasswordDecrypter = null;
+                return;
+            }
+            pDatabase.password = tempPassword;
             PasswordDecrypter = null;
             pDatabase.MultipleActiveResultsets = true;
             pDatabase.workstationID = Environment.MachineName;
