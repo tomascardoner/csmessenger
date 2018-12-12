@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Cardoner Sistemas")]
 [assembly: AssemblyProduct("CS-Messenger")]
 [assembly: AssemblyCopyright("Copyright © 2018 Cardoner Sistemas")]
-[assembly: AssemblyTrademark("® CS-Messenger")]
+[assembly: AssemblyTrademark("® CS-Messenger 2018")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
