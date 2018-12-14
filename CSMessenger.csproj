@@ -69,16 +69,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\..\Users\Tomas\Dropbox\Cardoner Sistemas\Framework\CSharp\CS_Constants.cs">
+    <Compile Include="C:\Data\Cardoner Sistemas\Development\framework-csharp\CS_Constants.cs">
       <Link>CS_Constants.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\..\Users\Tomas\Dropbox\Cardoner Sistemas\Framework\CSharp\CS_Database_SQL.cs">
+    <Compile Include="C:\Data\Cardoner Sistemas\Development\framework-csharp\CS_Database_SQL.cs">
       <Link>CS_Database_SQL.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\..\Users\Tomas\Dropbox\Cardoner Sistemas\Framework\CSharp\CS_Encrypt_TripleDES.cs">
+    <Compile Include="C:\Data\Cardoner Sistemas\Development\framework-csharp\CS_Encrypt_TripleDES.cs">
       <Link>CS_Encrypt_TripleDES.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\..\Users\Tomas\Dropbox\Cardoner Sistemas\Framework\CSharp\CS_Form.cs">
+    <Compile Include="C:\Data\Cardoner Sistemas\Development\framework-csharp\CS_Form.cs">
       <Link>CS_Form.cs</Link>
     </Compile>
     <Compile Include="ChatMessageList.cs" />
